@@ -4,6 +4,15 @@ Imports KeskeTzeModelLibrary
 
 Public Module ServicioOProcesoFunctions
 
+
+    ''' <summary>
+    ''' Genera un GUID para el <see cref="KeskeTzeModelLibrary.ServicioOProceso">servicioOProceso</see> deseado.
+    ''' </summary>
+    ''' <param name="servicioOProceso">Instancia de <see cref="KeskeTzeModelLibrary.ServicioOProceso">servicioOProceso</see></param>
+    ''' <returns>
+    ''' Genera un GUID para el <see cref="KeskeTzeModelLibrary.ServicioOProceso">servicioOProceso</see>.
+    ''' </returns>
+    ''' <remarks> Usa <see cref="ServicioOProceso.GetHashCode()">GetHashCode</see> cómo semilla para que siempre genere el mismo GUID desde cualquier lugare y momento</remarks>
     <Extension>
     Public Function GetGuid(servicioOProceso As ServicioOProceso) As Guid
         Dim resultado As Guid = Guid.Empty
@@ -26,11 +35,15 @@ Public Module ServicioOProcesoFunctions
     <Extension>
     Public Function GetNombreCorto(servicioOProceso As ServicioOProceso) As String
         Dim resultado As String = ""
+
         If String.IsNullOrEmpty(servicioOProceso.Nombre) And (String.IsNullOrEmpty(servicioOProceso.Ruta) = False) Then
+            '''Si el nombere viene vacío pero la ruta no
             resultado = NombreCorto.GenerarNombreCortoDesdeRuta(servicioOProceso.Ruta)
         ElseIf String.IsNullOrEmpty(servicioOProceso.Ruta) And (String.IsNullOrEmpty(servicioOProceso.Nombre) = False) Then
+            '''Sino, y la ruta viene vacía pero el nombere viene copn valor
             resultado = NombreCorto.GenerarNombreCortoDesdeLargo(servicioOProceso.Nombre)
         Else
+
             Throw New ArgumentNullException("El ServicioOProceso usado cómo argumento no tiene establecidas la propiedad Ruta ni la propiedad nombre." & Environment.NewLine &
                                             "Se requiere al menos una de las dos propiedades para obtener el NombreCorto")
         End If

@@ -1,7 +1,15 @@
 
 Imports System.ComponentModel.Design
 
+
+''' <summary>
+''' Interfaz que establece la estructura de la clase <see cref="KeskeTzeModelLibrary.ServicioOProceso">servicioOProceso</see>.
+''' </summary>
+''' <remarks>
+''' <see cref="KeskeTzeModelLibrary.IServicioOProcesoBase">servicioOProceso</see> sirve para definir un proceso o un servicio.
+''' </remarks>
 Public Interface IServicioOProcesoBase
+    Property Nombre As String
 
 End Interface
 ''' <summary>

@@ -1,8 +1,11 @@
 <Solution>
-  <Folder Name="/0-capaExterna/">
+  <Folder Name="/0-Externa/">
     <Project Path="Crkw.BL.KeskeTzeLib/Crkw.BL.KeskeTzeLib.vbproj" />
   </Folder>
-  <Folder Name="/1-capaINterna/">
+  <Folder Name="/00-Archivos/">
+    <File Path="ToDo.md" />
+  </Folder>
+  <Folder Name="/1-Interna/">
     <Project Path="KeskeTzeBLLibrary/KeskeTzeBLLibrary.vbproj" />
     <Project Path="KeskeTzeModelLibrary/KeskeTzeModelLibrary.vbproj" />
   </Folder>

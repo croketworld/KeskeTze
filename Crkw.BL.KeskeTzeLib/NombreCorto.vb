@@ -1,5 +1,8 @@
 ﻿Imports System.IO
 
+''' <summary>
+''' Genera un nombre corto, alias o abreviatura desde un nombre largo o una ruta de archivo o ejecución.
+''' </summary>
 Public Module NombreCorto
 
     ''' <summary>
@@ -23,10 +26,15 @@ Public Module NombreCorto
     ''' </example>
     Private Articulos As String() = {"el", "la", "los", "las", "lo", "un", "una", "unos", "unas"}
 
-
+    ''' <summary>
+    ''' Función que invoca <see cref="GenerarNombreCortoDesdeLargo(String)">GenerarNombreCortoDesdeLargo</see> o <see cref="GenerarNombreCortoDesdeRuta(String)">GenerarNombreCortoDesdeLargo</see> dependiendo de si
+    ''' </summary>
+    ''' <param name="nombreLargoORuta">EL nombre largo o ruta de ejecución (con o sin argumentos)</param>
+    ''' <returns></returns>
     Public Function GenerarNombreCortoDesdeNombreLargoORuta(nombreLargoORuta As String) As String
+        Dim rutaONombreLargoSinArgumentos As String = QuitarArgumentosDeEjecucionDeRuta(nombreLargoORuta)
         Dim res As String =
-        IIf(IO.File.Exists(nombreLargoORuta),
+        IIf(IO.File.Exists(rutaONombreLargoSinArgumentos),
             GenerarNombreCortoDesdeRuta(nombreLargoORuta),
             GenerarNombreCortoDesdeLargo(nombreLargoORuta))
         Return res
@@ -57,12 +65,18 @@ Public Module NombreCorto
             Dim anteriorEsPreposicion As Boolean = False
             If indiceParte > 0 Then anteriorEsPreposicion = Preposiciones.Contains(partes(indiceParte - 1))
 
-            If esArticulo And anteriorEsPreposicion Then ''Si es artículo.  tomar todo en minúsculas
-                'SI el artículo tiene dos letras, se toma tal cual
-                If trozoParte.Length = 3 Then 'SI el artículo tiene tres letras, tomar la primera y la ultima
+            If esArticulo And anteriorEsPreposicion Then
+                '''Si es artículo.  tomar todo en minúsculas
+
+
+                If trozoParte.Length = 3 Then
+                    '''SI el artículo tiene tres letras, tomar la primera y la ultima
                     trozoParte = trozoParte(0) & trozoParte(2)
-                ElseIf trozoParte.Length = 4 Then 'SI el artículo tiene cuatro letras, tomar la primera, la segunda y la ultima
+                ElseIf trozoParte.Length = 4 Then
+                    '''SI el artículo tiene cuatro letras, tomar la primera, la segunda y la ultima
                     trozoParte = trozoParte(0) & trozoParte(1) & trozoParte(3)
+                Else '''SI el artículo tiene dos letras, se toma tal cual
+                    '''No hay nada que hacer si pasa por aquí, que es en el caso de que el artículo tenga dos letras.
                 End If
             Else ''En cualqier otro caso de que no sea artículo
                 '''Primero se obtiene la primera letra en mayúscula 
@@ -113,7 +127,7 @@ Public Module NombreCorto
     ''' (salida) resultado = "C:\WINDOWS\System32\svchost.exe"
     ''' </example>
     Private Function QuitarArgumentosDeEjecucionDeRuta(rutaEjecucion As String) As String
-        Dim partePrincipal As String = rutaEjecucion.Trim
+        Dim partePrincipal As String = rutaEjecucion.Trim()
         If rutaEjecucion.Contains(" -") Then
             partePrincipal = rutaEjecucion.Split(" -")(0).Trim
         End If
