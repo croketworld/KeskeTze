@@ -1,27 +1,4 @@
-﻿
-Public Class PlantillaBaseClass
-
-#Region "propiedades"
-
-
-#End Region
-
-#Region "constructores"
-    Public Sub New()
-
-    End Sub
-
-#End Region
-
-#Region "operadores"
-
-
-#End Region
-
-
-End Class
-
-''' <summary>
+﻿''' <summary>
 ''' Determina si un es un servicio o un proceso
 ''' </summary>
 Public Enum ETipoServicioOProceso

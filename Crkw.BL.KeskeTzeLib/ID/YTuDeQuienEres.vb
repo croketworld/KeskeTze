@@ -4,7 +4,7 @@ Imports System.Linq.Expressions
 ''' <summary>
 ''' De marujitaaaa le dije yo
 ''' </summary>
-Public Class YTuDeQuienEres
+Public NotInheritable Class YTuDeQuienEres
 
     ''' <summary>
     ''' Determina si un archivo es un ejecutable en base a su extensión.
@@ -16,7 +16,7 @@ Public Class YTuDeQuienEres
         Dim ff As System.IO.FileInfo = Nothing
         Try
             ff = New IO.FileInfo(rutaAlArchivo)
-        Catch ex As Exception
+        Catch
 
         End Try
         If ff IsNot Nothing And ff.Exists Then Return Constantes.ExtensionesEjecutables.Contains(ff.Extension.Substring(1))
@@ -43,7 +43,7 @@ Public Class YTuDeQuienEres
         Try
             ff = New IO.FileInfo(rutaAlArchivo)
             existeYs = True
-        Catch ex As Exception
+        Catch
 
         End Try
         Return existeYs
@@ -67,7 +67,7 @@ Public Class YTuDeQuienEres
         End Try
         If existeYs And ff IsNot Nothing Then
             Dim extension As String = ff.Extension
-            Return IIf(extension.Length > 1, ff.Extension.Substring(1).ToLower(), Nothing)
+            Return IIf(extension.Length > 1, ff?.Extension?.Substring(1)?.ToLowerInvariant(), Nothing)
         End If
         If excepcionCapturada IsNot Nothing Then
             Dim tipoExceep As String = excepcionCapturada.GetType().Name
@@ -80,7 +80,7 @@ Public Class YTuDeQuienEres
                     errorMessageBase += "que la ruta es muy larga o el stream del archivo está bloqueado" & rutaAlArchivo & Environment.NewLine
             End Select
             Dim msgErroor As String = errorMessageBase
-            Dim exresult As New ApplicationException(msgErroor, excepcionCapturada)
+            Dim exresult As New TontakoException(msgErroor, excepcionCapturada)
             Throw exresult
         End If
         Return Nothing

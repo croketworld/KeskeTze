@@ -11,5 +11,8 @@
   <Folder Name="/2-Interna/">
     <Project Path="KeskeTzeBLLibrary/KeskeTzeBLLibrary.vbproj" />
   </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+  </Folder>
   <Project Path="KeskeTze/KeskeTze.vbproj" />
 </Solution>
