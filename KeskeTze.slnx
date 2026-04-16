@@ -6,8 +6,10 @@
     <File Path="ToDo.md" />
   </Folder>
   <Folder Name="/1-Interna/">
-    <Project Path="KeskeTzeBLLibrary/KeskeTzeBLLibrary.vbproj" />
     <Project Path="KeskeTzeModelLibrary/KeskeTzeModelLibrary.vbproj" />
+  </Folder>
+  <Folder Name="/2-Interna/">
+    <Project Path="KeskeTzeBLLibrary/KeskeTzeBLLibrary.vbproj" />
   </Folder>
   <Project Path="KeskeTze/KeskeTze.vbproj" />
 </Solution>

@@ -6,27 +6,6 @@
 Public Module NombreCorto
 
     ''' <summary>
-    ''' Lista de preposiciones para el acortado de nombre.
-    ''' </summary>
-    ''' <example>
-    ''' (entrada)  Estacion de trabajo
-    ''' (salida) EsDTr
-    ''' convirtiendo la preposuición 'de' en 'D'
-    ''' </example>
-    Private Preposiciones As String() = {"a", "ante", "bajo", "cabe", "con", "contra", "de", "desde", "durante", "en", "entre", "hacia", "hasta", "mediante", "para", "por", "según", "sin", "so", "sobre", "tras"}
-
-
-    ''' <summary>
-    ''' Lista de artículos para el acortado de nombres.
-    ''' </summary>
-    ''' <remarks>Usado en combinación de las preposiciones.</remarks>
-    ''' <example>
-    ''' (entrada)  Estacion de los trabajos
-    ''' (salida) EsDlsTr
-    ''' </example>
-    Private Articulos As String() = {"el", "la", "los", "las", "lo", "un", "una", "unos", "unas"}
-
-    ''' <summary>
     ''' Función que invoca <see cref="GenerarNombreCortoDesdeLargo(String)">GenerarNombreCortoDesdeLargo</see> o <see cref="GenerarNombreCortoDesdeRuta(String)">GenerarNombreCortoDesdeLargo</see> dependiendo de si
     ''' </summary>
     ''' <param name="nombreLargoORuta">EL nombre largo o ruta de ejecución (con o sin argumentos)</param>
@@ -39,7 +18,6 @@ Public Module NombreCorto
             GenerarNombreCortoDesdeLargo(nombreLargoORuta))
         Return res
     End Function
-
 
     ''' <summary>
     ''' Devuelve un string en CamelCase obteniendo las dos primeras letras de cada parte del texto introducido cómo parametro de nombreLargo.
@@ -61,14 +39,12 @@ Public Module NombreCorto
             ''' SI la longitud es superior a 1 carácter, tomamos los dos primeros solamente
             Dim trozoParte As String = IIf(parte.Length > 1, parte.Substring(0, 2), parte.Substring(0, 1))
 
-            Dim esArticulo As Boolean = Articulos.Contains(trozoParte)
+            Dim esArticulo As Boolean = Constantes.Articulos.Contains(trozoParte)
             Dim anteriorEsPreposicion As Boolean = False
-            If indiceParte > 0 Then anteriorEsPreposicion = Preposiciones.Contains(partes(indiceParte - 1))
+            If indiceParte > 0 Then anteriorEsPreposicion = Constantes.Preposiciones.Contains(partes(indiceParte - 1))
 
             If esArticulo And anteriorEsPreposicion Then
                 '''Si es artículo.  tomar todo en minúsculas
-
-
                 If trozoParte.Length = 3 Then
                     '''SI el artículo tiene tres letras, tomar la primera y la ultima
                     trozoParte = trozoParte(0) & trozoParte(2)
@@ -82,17 +58,12 @@ Public Module NombreCorto
                 '''Primero se obtiene la primera letra en mayúscula 
                 '''Dim primeraLetraMayuscula As Char = Char.ToUpper(trozoParte.FirstOrDefault)
                 trozoParte = Char.ToUpper(trozoParte.FirstOrDefault)
-                If Preposiciones.Contains(trozoParte) = False Then
+                If Constantes.Preposiciones.Contains(trozoParte) = False Then
                     '''si no es preposición, tomamos más allá de la primera letra en mayúscula
                     '''Si es preposición, por ejemplo "de" se convierte en "D"
                     trozoParte += trozoParte.Substring(1)
                 End If
             End If
-
-
-
-
-
             res += trozoParte
         Next
         Return res.Trim
@@ -115,8 +86,6 @@ Public Module NombreCorto
         Return GenerarNombreCortoDesdeLargo(nombreArchivo)
     End Function
 
-
-
     ''' <summary>
     ''' Devuelve la ruta completa a un archivo desde su ruta de ejecución
     ''' </summary>
@@ -126,12 +95,65 @@ Public Module NombreCorto
     ''' (entrada) rutaEjecución = "C:\WINDOWS\System32\svchost.exe -k NetworkService -p"
     ''' (salida) resultado = "C:\WINDOWS\System32\svchost.exe"
     ''' </example>
-    Private Function QuitarArgumentosDeEjecucionDeRuta(rutaEjecucion As String) As String
+    Public Function QuitarArgumentosDeEjecucionDeRuta(rutaEjecucion As String) As String
         Dim partePrincipal As String = rutaEjecucion.Trim()
         If rutaEjecucion.Contains(" -") Then
             partePrincipal = rutaEjecucion.Split(" -")(0).Trim
         End If
         Return partePrincipal
+    End Function
+
+    ''' <summary>
+    ''' Devuelve el nombre de un archivo sin extensión, y si estaba en formato CamelCase, añade espacios delante de las mayúsculas
+    ''' </summary>
+    ''' <param name="rutaEjecucion">Ruta de ejecución o ruta completa al archivo</param>
+    ''' <returns></returns>
+    ''' <example>
+    ''' (entrada) rutaEjecución = "C:\WINDOWS\System32\svchost.exe -k NetworkService -p"
+    ''' (salida) resultado = "C:\WINDOWS\System32\svchost.exe"
+    ''' </example>
+    Public Function ObtenerNombreDeEjecutable(rutaEjecucion As String) As String
+        Dim partePrincipal As String = rutaEjecucion.Trim()
+        If rutaEjecucion.Contains(" -") Then
+            partePrincipal = rutaEjecucion.Split(" -")(0).Trim
+        End If
+        Dim existeYs As Boolean = False
+        Dim ff As System.IO.FileInfo = Nothing
+        Try
+            ff = New IO.FileInfo(rutaEjecucion)
+            existeYs = True
+        Catch ex As Exception
+
+        End Try
+        Dim resultado As String = partePrincipal.Replace(ff.DirectoryName, "").Replace(ff.Extension, "")
+        If resultado.First = "\" Then resultado = resultado.Substring(1)
+        If ContieneAlgunaMayuscula(resultado) Then
+            Dim ooaoaoao As String = ""
+            Dim anteriorMayusIndice As Integer = 0
+            For i As Integer = 0 To resultado.Length
+                Dim caracter As Char = resultado(i)
+                If Char.IsUpper(caracter) Then
+                    If anteriorMayusIndice > 0 Then ooaoaoao += " "
+                    anteriorMayusIndice = i
+                End If
+                ooaoaoao += caracter
+            Next
+            Return ooaoaoao
+        End If
+        Return resultado
+    End Function
+
+    ''' <summary>
+    ''' Determina si una cadena contiene alguna mayúscula
+    ''' </summary>
+    ''' <param name="cadena"></param>
+    ''' <returns></returns>
+
+    Public Function ContieneAlgunaMayuscula(cadena As String) As Boolean
+        For i As Integer = 0 To cadena.Length
+            If Char.IsUpper(cadena(i)) Then Return True
+        Next
+        Return False
     End Function
 
 End Module
